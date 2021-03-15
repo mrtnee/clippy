@@ -5,18 +5,18 @@
 #ifndef CLIPBOARD_LINKED_LIST_H
 #define CLIPBOARD_LINKED_LIST_H
 
-struct Node {
-    struct Node* next;
-    char* value;
-} typedef Node;
+typedef struct LinkedList LinkedList;
 
-struct LinkedList {
-    Node* first;
-    Node* last;
-    int count;
-    int max_size;
-} typedef LinkedList;
+LinkedList* ll_new(int max_size);
+void ll_prepend(LinkedList* list, char* value);
+void ll_append(LinkedList* list, char* value);
+int ll_insert(LinkedList* list, char* value, int position);
+void ll_remove(LinkedList* list, char* value);
+char* ll_remove_at(LinkedList* list, int position);
+int ll_count(LinkedList* list);
+int ll_is_empty(LinkedList* list);
+void ll_empty(LinkedList* list);
+void ll_print(LinkedList* list);
 
-LinkedList linked_list_new(int max_size);
 
 #endif //CLIPBOARD_LINKED_LIST_H

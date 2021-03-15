@@ -3,16 +3,9 @@
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
+#include "linked_list.h"
 
-struct Clipboard {
-    int elements_max;
-    int elements_count;
-    gchar **elements;
-} typedef Clipboard;
-
-Clipboard* clipboard_new(int elements_max);
-void clipboard_element_add(Clipboard* clipboard, char* str_value);
-void clipboard_print(Clipboard* clipboard);
+void test_stuff();
 
 void handle_owner_change (GtkClipboard *clipboard, GdkEvent *event, gpointer data) {
     // Avoid 'unused args' warning.
@@ -36,13 +29,11 @@ static gboolean check_escape(GtkWidget* widget, GdkEventKey* event, gpointer dat
     return FALSE;
 }
 
-void hello(GtkWidget* widget, gpointer data) {
-    printf("Hello world!\n");
-}
-
 int main(int argc, char** argv) {
     // Standard boilerplate: initialize the toolkit.
     gtk_init(&argc, &argv);
+
+    test_stuff();
 
     // Get a handle to the given clipboard. You can also ask for
     // GDK_SELECTION_PRIMARY (the X "primary selection") or
@@ -79,15 +70,6 @@ int main(int argc, char** argv) {
     //g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(hello), NULL);
     //g_signal_connect(G_OBJECT(window), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
 
-    Clipboard* clipboard1 = clipboard_new(50);
-    clipboard_element_add(clipboard1, "Hello clipboard!");
-    clipboard_element_add(clipboard1, "Hopefully this works!");
-
-    for (int i = 0; i < clipboard1->elements_count; i++) {
-        GtkWidget* list_box_row = gtk_list_box_row_new();
-        gtk_container_add(GTK_CONTAINER(list_box_row), gtk_label_new(clipboard1->elements[i]));
-        gtk_list_box_prepend(GTK_LIST_BOX(list_box), list_box_row);
-    }
     g_signal_connect(window, "key_press_event", G_CALLBACK(check_escape), NULL);
 
     gtk_widget_show_all(window);
@@ -99,23 +81,17 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-Clipboard* clipboard_new(int elements_max) {
-    Clipboard* clipboard = malloc(sizeof(Clipboard));
-    clipboard->elements = malloc(elements_max * sizeof(gchar));
-    clipboard->elements_max = elements_max;
-    clipboard->elements_count = 0;
-    return clipboard;
-}
-
-void clipboard_element_add(Clipboard* clipboard, char* str_val) {
-    if (clipboard->elements_count >= clipboard->elements_max)
-        return;
-
-    //strcpy((char *)(clipboard->elements[clipboard->elements_count]), str_val);
-    clipboard->elements_count++;
-}
-
-void clipboard_print(Clipboard* clipboard) {
-    for (int i = 0; i < clipboard->elements_count; i++)
-        printf("%s", *(clipboard->elements + i));
+void test_stuff() {
+    LinkedList* list = ll_new(10);
+    ll_append(list, "Hello world 1!");
+    ll_append(list, "Hello world 2!");
+    ll_append(list, "Hello world 3!");
+    ll_append(list, "Hello world 4!");
+    ll_append(list, "Hello world 5!");
+    ll_insert(list, "Hi, I'm Martin!", 3);
+    ll_insert(list, "Insert this one at the beginning!", 0);
+    ll_insert(list, "Insert this one at the end.", ll_count(list));
+    ll_insert(list, "Insert this one beyond the end.", ll_count(list)+1);
+    ll_insert(list, "Insert this one at index -1.", -1);
+    ll_print(list);
 }
