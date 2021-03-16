@@ -23,6 +23,10 @@ typedef struct LinkedList {
 
 /* Static function declarations */
 static void _ll_insert(LinkedList* list, char* value, int position);
+static char* _ll_remove_first_element(LinkedList* list);
+static char* _ll_remove_last_element(LinkedList* list);
+static char* _ll_remove(LinkedList* list, char* value);
+static char* _ll_remove_at(LinkedList* list, int position);
 
 
 static Node* node_new(char* value) {
@@ -95,9 +99,23 @@ int ll_insert(LinkedList* list, char* value, int position) {
 //        return;
 //
 //    Node* node = list->first;
-//    while () {
+//    while (node) {
 //    }
 //}
+
+char* ll_remove_at(LinkedList* list, int position) {
+    if (position < 0 || position >= ll_count(list))
+        return NULL;
+
+    char* value;
+    if (position == 0)
+        value = _ll_remove_first_element(list);
+    else
+        value = _ll_remove_at(list, position);
+
+    list->count--;
+    return value;
+}
 
 int ll_is_empty(LinkedList* list) {
     return list->count == 0;
@@ -115,6 +133,20 @@ int ll_count(LinkedList* list) {
     return list->count;
 }
 
+void ll_empty(LinkedList* list) {
+    Node* iter = list->first;
+    Node* tmp;
+    while (iter) {
+        free(iter->value);
+        tmp = iter;
+        iter = iter->next;
+        free(tmp);
+    }
+    list->count = 0;
+    list->first = NULL;
+    list->last = NULL;
+}
+
 
 /* Static functions */
 static void _ll_insert(LinkedList* list, char* value, int position) {
@@ -126,4 +158,33 @@ static void _ll_insert(LinkedList* list, char* value, int position) {
     node->next = iter->next;
     iter->next = node;
     list->count++;
+}
+
+static char* _ll_remove_first_element(LinkedList* list) {
+    Node* node = list->first;
+
+    list->first = node->next;
+    if (ll_count(list) == 1)
+        list->last = NULL;
+
+    char* value = node->value;
+    free(node);
+    return value;
+}
+
+// Assume that at least one element is before the element
+// at position <position>.
+static char* _ll_remove_at(LinkedList* list, int position) {
+    Node* iter = list->first;
+    for (int i = 0; i < position-1; i++)
+        iter = iter->next;
+
+    Node* node = iter->next;
+    iter->next = node->next;
+    if (position == ll_count(list) - 1)
+        list->last = iter;
+
+    char* value = node->value;
+    free(node);
+    return value;
 }

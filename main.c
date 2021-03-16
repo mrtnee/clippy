@@ -86,12 +86,23 @@ void test_stuff() {
     ll_append(list, "Hello world 1!");
     ll_append(list, "Hello world 2!");
     ll_append(list, "Hello world 3!");
-    ll_append(list, "Hello world 4!");
-    ll_append(list, "Hello world 5!");
     ll_insert(list, "Hi, I'm Martin!", 3);
     ll_insert(list, "Insert this one at the beginning!", 0);
     ll_insert(list, "Insert this one at the end.", ll_count(list));
     ll_insert(list, "Insert this one beyond the end.", ll_count(list)+1);
     ll_insert(list, "Insert this one at index -1.", -1);
     ll_print(list);
+    printf("\n");
+    // Let's try removing some elements.
+    ll_remove_at(list, 0);
+    ll_remove_at(list, 2);
+    ll_remove_at(list, ll_count(list)-1);
+    ll_print(list);
+    printf("Count: %d\n", ll_count(list));
+
+    printf("\n");
+    ll_empty(list);
+    printf("Count: %d\n", ll_count(list));
+    ll_print(list);
+
 }
