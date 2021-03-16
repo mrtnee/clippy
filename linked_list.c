@@ -8,11 +8,6 @@
 #include "linked_list.h"
 
 /* Struct definitions */
-typedef struct Node {
-    struct Node* next;
-    char* value;
-} Node;
-
 typedef struct LinkedList {
     Node* first;
     Node* last;
@@ -45,6 +40,22 @@ LinkedList* ll_new(int max_size) {
     list->first = NULL;
     list->last = NULL;
     return list;
+}
+
+Node* ll_first(LinkedList* list) {
+    return list->first;
+}
+
+char* ll_get(LinkedList* list, int position) {
+    if (position < 0 || position >= ll_count(list))
+        return NULL;
+
+    Node* node = list->first;
+    for (int i = 0; i < position; i++) {
+        node = node->next;
+    }
+
+    return node->value;
 }
 
 void ll_prepend(LinkedList* list, char* value) {
