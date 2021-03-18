@@ -11,5 +11,5 @@ add_definitions(${GTK_FLAGS_OTHER})
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(clipboard main.c linked_list.c linked_list.h)
+add_executable(clipboard main.c)
 target_link_libraries(clipboard ${GTK_LIBRARIES})
